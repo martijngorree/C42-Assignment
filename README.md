@@ -10,4 +10,14 @@ My first steps will be to get the call to the C42 Api up and running.
 Then get my proxy running and accepting requests.
 Then to tie the two together.
 
+## Dependencies
+* Python 3.5.x
+* https://github.com/yyuu/pyenv-virtualenv
+* https://github.com/yyuu/pyenv-virtualenvwrapper
 
+## Setup
+```
+$ pyenv virtualenv <virtualenv-name>
+$ pyenv activate <virtualenv-name>
+$ pip install -r requirements.txt
+```
