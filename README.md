@@ -21,3 +21,13 @@ $ pyenv virtualenv <virtualenv-name>
 $ pyenv activate <virtualenv-name>
 $ pip install -r requirements.txt
 ```
+
+## Run the proxy
+```
+$ python proxy.py
+```
+
+## Run the test
+```
+$ python test.py
+```
