@@ -88,6 +88,6 @@ if __name__ == "__main__":
     EVENT_ID = "704ec81389b26f30452f314845e8e0ad_14866401158750"
 
     logging.debug(api.get("events/{}".format(EVENT_ID)))
-    logging.debug(api.get("event-subscriptions", params={ "event_ids": "[{}]".format(EVENT_ID) }))
+    logging.debug(api.get("event-subscriptions", params={ "event_ids": [EVENT_ID] }))
     
 
