@@ -1,1 +1,10 @@
-C42_TOKEN = None
+DEBUG = False
+
+PROXY_HOST = "localhost"
+PROXY_PORT = 8080
+
+MEMCACHED_SERVERS = ["127.0.0.1:11211"]
+MEMCACHED_TTL = 360
+
+# C42 Api token
+C42_TOKEN = ""
