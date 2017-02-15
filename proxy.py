@@ -20,7 +20,6 @@ if DEBUG:
 else:
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.ERROR)
 
-
 api = C42Api(token=C42_TOKEN)
 mc = Client(MEMCACHED_SERVERS, debug=DEBUG)
 try:
@@ -28,26 +27,29 @@ try:
 except:
     raise
 
-def cached_request(method, *args, **kwargs):
+def cached_request(http_method, api_method, **kwargs):
     """
     Cache the requests to the API.
     More or less a wrapper for the api.request call
-    """
 
+    Chose to include caching in the proxy instead of the api code, so that the api is kept clean.
+    """
     # build a caching key hash based on the whole request.
     # basicly just flatten out all the data and create a hash
-    cache_key = str("{}{}{}".format(method, json.dumps(args), json.dumps(kwargs))).encode('utf-8')
+    cache_key = str("{}{}{}".format(http_method, api_method, json.dumps(kwargs))).encode('utf-8')
     logging.debug("Generated cache_key: {}".format(cache_key))
     hashed_cache_key = hashlib.md5(cache_key).hexdigest()
     logging.debug("Hashed key: {}".format(hashed_cache_key))
 
     try:
-        logging.debug("Hitting cache for {}".format(method))
+        logging.debug("Trying cache for {}".format(api_method))
         response = mc.get(hashed_cache_key)
         if response == None:
             raise Exception("No cached response found")
     except:
-        response = api.request(method, *args, **kwargs)
+        logging.debug("New request for {}".format(api_method))
+        api_method_call = getattr(api, http_method)
+        response = api_method_call(api_method, **kwargs)
         mc.set(hashed_cache_key, response, time=MEMCACHED_TTL)
 
     return response
@@ -57,10 +59,9 @@ def cached_request(method, *args, **kwargs):
 @route("/events-with-subscriptions/<event_id>")
 def events_with_subscriptions(event_id):
 
-    events = cached_request("events/{}".format(event_id)).get('data')
-    event_subscriptions = cached_request("event-subscriptions", { "event_ids": "[{}]".format(event_id) }).get('data')
-
+    events = cached_request("get", "events/{}".format(event_id)).get('data')
     logging.debug(events)
+    event_subscriptions = cached_request("get", "event-subscriptions", params={ "event_ids": [event_id] }).get('data')
     logging.debug(event_subscriptions)
 
     event_title = events[0].get('title')

@@ -12,14 +12,20 @@ Then to tie the two together.
 
 ## Dependencies
 * Python 3.5.x
+* Memcached
 * https://github.com/yyuu/pyenv-virtualenv
 * https://github.com/yyuu/pyenv-virtualenvwrapper
 
 ## Setup
 ```
-$ pyenv virtualenv <virtualenv-name>
+# skip this if your local version is python 3.5 or better
+$ pyenv install 3.5.2
+# carry on.
+$ pyenv virtualenv 3.5.2 <virtualenv-name>
 $ pyenv activate <virtualenv-name>
 $ pip install -r requirements.txt
+$ cp settings.default.py settings.py
+<edit settings.py add the C42 token>
 ```
 
 ## Run the proxy
@@ -27,7 +33,7 @@ $ pip install -r requirements.txt
 $ python proxy.py
 ```
 
-## Run the test
+## Run the test (in another terminal window)
 ```
 $ python test.py
 ```
